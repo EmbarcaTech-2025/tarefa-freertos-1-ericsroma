@@ -16,14 +16,11 @@ set(PICO_BOARD pico CACHE STRING "Board type")
 
 cmake_minimum_required(VERSION 3.12)
 
-# Name project
-SET(ProjectName rp2040-freertos-template)
-
 # Set any variables required for importing libraries
 if (DEFINED ENV{FREERTOS_PATH})
   SET(FREERTOS_PATH $ENV{FREERTOS_PATH})
 else()
-  SET(FREERTOS_PATH ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
+  SET(FREERTOS_PATH ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS)
 endif()
 
 message("FreeRTOS Kernel located in ${FREERTOS_PATH}")
@@ -33,27 +30,32 @@ include(pico_sdk_import.cmake)
 include(${FREERTOS_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
 # Define project
-project(${ProjectName} C CXX ASM)
+project(rp2040-freertos-template C CXX ASM)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_executable(${ProjectName}
+add_executable(rp2040-freertos-template
     main.c
+    bibliotecas/button.c
+    bibliotecas/led.c
+    bibliotecas/buzzer.c
 )
 
-target_include_directories(${ProjectName} PRIVATE
+target_include_directories(rp2040-freertos-template PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/bibliotecas
 )
 
-target_link_libraries(${ProjectName} 
+target_link_libraries(rp2040-freertos-template 
     pico_stdlib 
-    FreeRTOS-Kernel-Heap4 
+    FreeRTOS-Kernel-Heap4
+    hardware_pwm 
     hardware_i2c
     )
 
-pico_add_extra_outputs(${ProjectName})
+pico_add_extra_outputs(rp2040-freertos-template)
 
 # if you have anything in "lib" folder then uncomment below - remember to add a CMakeLists.txt
 # file to the "lib" directory

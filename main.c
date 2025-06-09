@@ -47,7 +47,7 @@ void led_task(void *pvParameters)
 void buzzer_task(void *pvParameters) 
 {
     uint buzzer_pin = 21;               // Pino do buzzer A
-    pwm_init_buzzer(buzzer_pin, 4000); // Inicializa PWM do buzzer em 4kHz
+    pwm_init_buzzer(buzzer_pin, 4000); // Inicializa PWM do buzzer em 5Hz
     while (1) 
     {
         pwm_set_gpio_level(buzzer_pin, 128); // Liga o buzzer 
@@ -107,7 +107,7 @@ int main()
 
     // Cria as tarefas do LED, buzzer e botões, atribuindo prioridades e handles
     xTaskCreate(led_task, "LED", 256, NULL, 2, &led_task_handle);
-    xTaskCreate(buzzer_task, "Buzzer", 256, NULL, 2, &buzzer_task_handle);
+    xTaskCreate(buzzer_task, "Buzzer", 256, NULL, 1, &buzzer_task_handle);
     xTaskCreate(button_task, "Buttons", 256, NULL, 3, NULL);
 
     vTaskStartScheduler(); // Inicia o escalonador do FreeRTOS

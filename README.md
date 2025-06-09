@@ -49,6 +49,20 @@ O objetivo é demonstrar o uso do FreeRTOS para gerenciamento concorrente de mú
 2. **Suspensão:** Ao pressionar Botão A ou B, a tarefa correspondente é suspensa e o periférico para.
 3. **Retomada:** Ao pressionar novamente, a tarefa é retomada e o periférico volta a funcionar.
 
+## Resposta das questões
+
+1. O que acontece se todas as tarefas tiverem a mesma prioridade?
+
+R: Se as tarefas tiverem a mesma prioridade, o escalonador do FreeRTOS irá alternar entre elas. Cada tarefa executa até chamar uma função de bloqueio (como vTaskDelay, vTaskSuspend, ou ficar esperando por um evento), ou até que seu tempo de execução termine (quantum). O sistema garante que todas as tarefas de mesma prioridade recebam tempo de CPU de forma justa. Nenhuma tarefa "preempte" a outra, pois todas têm o mesmo nível de importância para o escalonador. No código,  como todas as tarefas usam vTaskDelay, elas vão alternar normalmente e o sistema funcionará como esperado.
+
+2. Qual tarefa consome mais tempo da CPU?
+
+A tarefa button_task é chamada com mais frequência (a cada 100ms), enquanto as outras ficam a maior parte do tempo em espera (vTaskDelay). Portanto, button_task tende a consumir mais tempo de CPU em relação às outras.
+
+3. Quais seriam os riscos de usar polling sem prioridades?
+
+O uso de polling sem prioridades em um sistema multitarefa pode causar atrasos na resposta a eventos, desperdício de processamento e risco de perda de eventos rápidos, já que todas as tarefas competem igualmente pelo tempo de CPU e só verificam eventos em intervalos fixos. Isso reduz a eficiência e a responsividade do sistema, especialmente quando há necessidade de resposta rápida ou múltiplas tarefas concorrentes. O ideal é combinar polling apenas para tarefas menos críticas e usar interrupções e prioridades adequadas para eventos importantes.
+
 ## Arquivos
 
 - `main.c`: Arquivo principal que configura e gerencia as tarefas do sistema.
